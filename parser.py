@@ -3,6 +3,20 @@ from bs4 import BeautifulSoup, SoupStrainer
 from icecream import ic
 import time
 
+lc_st = "United KingdomCambridge"
+
+
+def split_location_string(location):
+    """
+    Split location string into a list [Country, City]
+    "United KingdomCambridge" -> ['United Kingdom', 'Cambridge']
+    """
+    for char_pos, char in enumerate(location):
+        if char.isupper() and char_pos != 0:
+            if location[char_pos - 1].islower():
+                return [location[:char_pos], location[char_pos:]]
+
+
 def scrape_reviews(isbn):
     """
     Scrape reviews from book's Goodreads webpage using BeautifulSoup 4.
@@ -10,44 +24,56 @@ def scrape_reviews(isbn):
     """
     requests_session = requests.Session()  # Launch a requests session in order to improve performance
 
-    page_url = "https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A47"
-
+    page = 1
+    page_url = f"https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page={page}"
     webpage = requests_session.get(page_url)
-
     soup = BeautifulSoup(webpage.content, "lxml")
-    # reviews_raw = soup.find_all('div', class_='gr_review_text')
-    # reviews = [review.text.strip() for review in reviews_raw]
 
-    titles_raw = soup.find_all('div', class_="ds-header")  # find names of the review authors
-    titles = [title.text.strip() for title in titles_raw]
+    last_page = int(soup.find('a', title="Go to last page").attrs["href"][-2:])
+    while page <= last_page:
+        print(page, page_url)
+        page_url = f"https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page={page}"
+        webpage = requests_session.get(page_url)
+        soup = BeautifulSoup(webpage.content, "lxml")
 
-    subtitles_raw = soup.find_all('div', class_="ds-top-content")  # find names of the review authors
-    subtitles = [subtitle.text.strip() for subtitle in subtitles_raw    ]
-    # print(subtitles)
-    recruiters_raw = soup.find_all('div', class_="field-name-recruiter-name")  # find names of the review authors
-    recruiters = [recruiter.text.strip() for recruiter in recruiters_raw]
+        page += 1
 
-    locations_raw = soup.find_all('div', class_="field-name-field-traineeship-full-location")  # find names of the review authors
-    locations = [location.text.strip() for location in locations_raw]
+        titles_raw = soup.find_all('div', class_="ds-header")  # find names of the review authors
+        titles = [title.text.strip() for title in titles_raw]
 
-    full_info = list(zip(titles,subtitles, recruiters, locations))
-    data_list=[]
+        subtitles_raw = soup.find_all('div', class_="ds-top-content")  # find names of the review authors
+        subtitles = [subtitle.text.strip() for subtitle in subtitles_raw]
 
-    for offer in full_info:
-        offer_dict ={"title":offer[0],"subtitle":offer[1], "recruiter": offer[2], "location": offer[3]}
-        data_list.append(offer_dict)
-    ic(offer_dict)
-    print(data_list)
-    # durations_raw = soup.find_all('div', class_="field-name-field-traineeship-full-location")  # find names of the review authors
-    # locations = [location.text for location in locations_raw]
-    # ratings_raw = soup.find_all('span', class_="gr_rating")  # find ratings of the review
-    # ratings = [rating.text.count("★") for rating in ratings_raw]  # convert starred rating into integer value
-    # ic(ratings, names)
-    #
+        recruiters_raw = soup.find_all('div', class_="field-name-recruiter-name")  # find names of the review authors
+        recruiters = [recruiter.text.strip() for recruiter in recruiters_raw]
+
+        locations_raw = soup.find_all('div', class_="field-name-field-traineeship-full-location")
+        locations = [split_location_string(location.text) for location in locations_raw]
+
+        durations_raw = soup.find_all('div',
+                                      class_="field-name-field-traineeship-duration")  # find names of the review authors
+        durations = [duration.text.strip()[10:] for duration in durations_raw]
+
+        deadlines_raw = soup.find_all('div', class_="field-name-field-traineeship-apply-deadline")
+        deadlines = [deadline.text.strip()[10:] for deadline in deadlines_raw]
+
+        full_info_links_raw = soup.find_all('a', text="Read more")
+        full_info_links = [full_info_link.attrs["href"] for full_info_link in full_info_links_raw]
+        # ic(full_info_links)
+
+        info_link_base = "https://erasmusintern.org"
+
+        full_info = list(zip(titles, subtitles, recruiters, locations, durations, deadlines))
+        data_list = []
+
+        for offer in full_info:
+            offer_dict = {"title": offer[0], "subtitle": offer[1], "recruiter": offer[2],
+                          "full_location": offer[3], "duration": offer[4], "deadline": offer[5]}
+            data_list.append(offer_dict)
+        ic(data_list)
     # start_time = time.time()
     # reviews = []
     # full_review_links = soup.find_all('link',itemprop="url")  # find links to the full reviews
-    # only_review_tags = SoupStrainer(itemprop="reviewBody")  # use special bs4 object to load the webpage partially
     # for full_review_link in full_review_links:
     #     ic(full_review_link.attrs["href"])
     #     full_review_webpage = requests_session.get(full_review_link.attrs["href"])
@@ -60,4 +86,6 @@ def scrape_reviews(isbn):
     # ic(full_reviews)
     # return full_reviews
     pass
+
+
 scrape_reviews(9780807014295)
