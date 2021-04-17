@@ -17,11 +17,12 @@ def split_location_string(location):
                 return [location[:char_pos], location[char_pos:]]
 
 
-def parse_info(link, specialization):
+def parse_info(link, specialization, commitment):
     """
     :param link: https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page=
-    :param specialization: CS
-    :return: data_list
+    :param specialization: string, which will be added to every offer object for filtering purposes
+    :param commitment: string, which will be added to every offer object for filtering purposes
+    :return: a list of dictionaries containing full info about the offer
     """
     requests_session = requests.Session()  # Launch a requests session in order to improve performance
 
@@ -84,12 +85,12 @@ def parse_info(link, specialization):
 
         full_info = list(zip(titles, subtitles, recruiters, locations, durations, deadlines, periods, requirements))
         for offer in full_info:
-            offer_dict = {"title": offer[0], "subtitle": offer[1], "recruiter": offer[2],
-                          "full_location": offer[3], "duration": offer[4], "deadline": offer[5],
-                          "periods": offer[6], "requirements": offer[7], "specialization": specialization}
-            data_list.append(offer_dict)
-            ic(offer_dict)
+            if offer[3]:  # add only if the location info is present
+                offer_dict = {"title": offer[0], "subtitle": offer[1], "recruiter": offer[2],
+                              "full_location": offer[3], "duration": offer[4], "deadline": offer[5],
+                              "periods": offer[6], "requirements": offer[7], "specialization": specialization,
+                              "commitment": commitment}
+                data_list.append(offer_dict)
     return data_list
-# print(parse_info("https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page=","Engineering and technology"))
-
+print(parse_info("https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_dot%3A0&f%5B1%5D=field_traineeship_field_studies%253Aparents_all%3A38&f%5B2%5D=field_traineeship_commitment%253Aparents_all%3A5&page=","Engineering and technology","fulltime"))
 
