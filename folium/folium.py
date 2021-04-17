@@ -38,7 +38,7 @@ _default_js = [
 
 _default_css = [
     ('leaflet_css',
-     'https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css'),
+     '../../static/styles/leaflet_restyle.css'),
     ('bootstrap_css',
      'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'),
     ('bootstrap_theme_css',

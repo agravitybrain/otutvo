@@ -145,7 +145,7 @@ input[type=submit]:hover{
 }
 
 .toggle {
-
+    width:75%;
   margin: 9px 0 1.5rem;
   box-sizing: border-box;
   font-size: 0;
@@ -216,6 +216,7 @@ input[type=submit]:hover{
 }
 
 .button-label {
+    width:50% !important;
   display: inline-block;
   padding: 1em 2em;
   margin: 0.5em;
