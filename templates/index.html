@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<style>
+	body{
+		background: #bcbaf4;  /* fallback for old browsers */
+
+	}
+</style>
+<div class="main_container container" style="text-align: center">
+ 		<span class="title_text underline--magical">O! tutvo</span>
+        <br><br>
+        <br><br>
+      		<form action="/map_generation" method="post">
+					<div class="row">
+						<div class="col">
+						<input name="country" placeholder="Enter a country" type="text"/>
+						</div>
+						<div class="col">
+
+								  <div class="button-wrap">
+									<input class="hidden radio-label" type="radio" name="specialization" id="yes-button" checked="checked" value="Engineering and technology"/>
+									<label class="button-label" for="yes-button">
+									  <h1>Engineering and Technology</h1>
+									</label>
+
+									<input class="hidden radio-label" type="radio" name="specialization" id="no-button" value="Communication and Information Sciences"/>
+									<label class="button-label" for="no-button">
+									  <h1>Communication and Information Sciences</h1>
+									</label>
+
+								  </div>
+						</div>
+
+						<div class="col">
+								<div class="toggle">
+									<input type="radio" name="commitment" value="full-time" id="full_time" checked="checked" />
+									<label for="full_time">Full-time</label>
+									<input type="radio" name="commitment" value="part-time" id="part_time" />
+									<label for="part_time">Part-time</label>
+								</div>
+
+							</div>
+					</div>
+
+					<input type="submit" value="Submit"/>
+
+
+			</form>
+    </div>
+{% endblock %}
+ 

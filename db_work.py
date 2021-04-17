@@ -3,9 +3,9 @@ from pprint import pprint
 from geopy.geocoders import Nominatim
 import parser
 
-
-connection = 'CONNECTION URL WAS REMOVED DUE TO SAFETY REASONS'
+connection = 'mongodb+srv://admin:ucuhacathon2021@cluster0.xqgj4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 client = MongoClient(connection)
+
 db = client['internships']
 collection = db['internship_locations']
 
@@ -62,7 +62,7 @@ def location_to_coordinates(loc_name: list):
     ''' Convert location name to its coordinates '''
     country = loc_name[0]
     locator = Nominatim(user_agent='myGeocoder')
-    
+
     location = locator.geocode(f'{country}, {loc_name[1]}')
     if location is None:
         return None
@@ -70,14 +70,14 @@ def location_to_coordinates(loc_name: list):
     return location.latitude, location.longitude
 
 
-
 if __name__ == '__main__':
-    courses = parser.parse_info("https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&f%5B1%5D=field_traineeship_dot%3A0&f%5B2%5D=field_traineeship_commitment%253Aparents_all%3A1&page=", 'Engineering and technology', 'part-time')
-    print(pass_to_db(courses))
+    # courses = parser.parse_info("https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&f%5B1%5D=field_traineeship_dot%3A0&f%5B2%5D=field_traineeship_commitment%253Aparents_all%3A1&page=", 'Engineering and technology', 'part-time')
+    # print(pass_to_db(courses))
 
-    # pprint(find({'full_location': 'United States', 'specialization': 'Engineering and technology', 'commitment': 'part-time'}))
+    print(find(
+        {'full_location': 'sdfdfs States', 'specialization': 'Engineering and technology', 'commitment': 'part-time'}))
+
     # collection.delete_many({})
-
     # locs = location_to_coordinates(["Canada", "Toronto, Montreal, Ottawa"])
     # print(locs)
 

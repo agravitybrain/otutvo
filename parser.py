@@ -3,9 +3,6 @@ from bs4 import BeautifulSoup, SoupStrainer
 from icecream import ic
 import time
 
-lc_st = "United KingdomCambridge"
-
-
 def split_location_string(location):
     """
     Split location string into a list [Country, City]
@@ -34,7 +31,12 @@ def parse_info(link, specialization, commitment):
 
     data_list = []
 
-    last_page = int(soup.find('a', title="Go to last page").attrs["href"][-2:])
+    last_page_raw = soup.find('a', title="Go to last page").attrs["href"]
+    if last_page_raw[-2] == "=":
+        last_page = int(last_page_raw[-1:])
+    else:
+        last_page = int(last_page_raw[-2:])
+
     while page <= last_page:
         # print(page, page_url)
         page_url = f"https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page={page}"
@@ -92,5 +94,6 @@ def parse_info(link, specialization, commitment):
                               "commitment": commitment}
                 data_list.append(offer_dict)
     return data_list
-print(parse_info("https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_dot%3A0&f%5B1%5D=field_traineeship_field_studies%253Aparents_all%3A38&f%5B2%5D=field_traineeship_commitment%253Aparents_all%3A5&page=","Engineering and technology","fulltime"))
+# print(parse_info("https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_dot%3A0&f%5B1%5D=field_traineeship_field_studies%253Aparents_all%3A38&f%5B2%5D=field_traineeship_commitment%253Aparents_all%3A5&page=","Engineering and technology","fulltime"))
+# print(parse_info("https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&f%5B1%5D=field_traineeship_dot%3A0&f%5B2%5D=field_traineeship_commitment%253Aparents_all%3A1&page=","Engineering and technology","fulltime"))
 

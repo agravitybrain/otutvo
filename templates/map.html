@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+    <div class="col-md-4 col-sm-6 internships_list">
+        <span class="sticky_wrapper">
+            <h1>
+<!--                <span class="underline&#45;&#45;magical">-->
+                    List of internships
+<!--                </span>-->
+            </h1>
+            <hr>
+        </span>
+        <div class="internships_wrapper">
+
+            {%for i in range(0, len)%}
+                <div class="internship_container">
+                    <p class="internship_title"><span class="underline--magical">{{loc_list[i]["title"]}}</span>    </p>
+                    <p class="internship_date">From {{loc_list[i]["periods"]}}</p>
+                    <p class="internship_desc"> Recruiter {{loc_list[i]["recruiter"]}}</p>
+                </div>
+            {%endfor%}
+            </div>
+    </div>
+    <div class="col-md-12 col-sm-12">
+    {{ map | safe}}
+    </div>
+<!--<link rel="stylesheet" href="{{ url_for('static',filename='styles/map_restyle.css') }}">-->
+
+<!--<style>-->
+<!--    .marker-cluster-small div{-->
+<!--        font-size:1.5rem !important;-->
+<!--        background-color:#FFFFFF !important;-->
+<!--        color: black !important;-->
+<!--        font-family: fantasy !important;-->
+<!--        font-weight: bold !important;-->
+<!--    }-->
+<!--    .marker-cluster-small{-->
+<!--        background-color:#000000 !important;-->
+<!--        filter: drop-shadow(0px 0px 12px #f72585) !important;-->
+<!--    }-->
+<!--    .marker-cluster-medium div{-->
+<!--        font-size:1.5rem !important;-->
+<!--        background-color:#FFFFFF !important;-->
+<!--        color: black !important;-->
+<!--        font-family: fantasy !important;-->
+<!--        font-weight: bold !important;-->
+<!--    }-->
+<!--    .marker-cluster-medium{-->
+<!--        background-color:#000000 !important;-->
+<!--        filter: drop-shadow(0px 0px 12px #f72585) !important;-->
+<!--    }-->
+<!--    .leaflet-container{-->
+<!--        background: #90D2F5 !important;-->
+<!--    }-->
+<!--    .leaflet-marker-icon.marker-cluster.marker-cluster-small.leaflet-zoom-animated.leaflet-interactive{-->
+<!--        background: black !important;-->
+<!--    }-->
+
+<!--</style>-->
+{% endblock %}
+
