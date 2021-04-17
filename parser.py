@@ -17,15 +17,17 @@ def split_location_string(location):
                 return [location[:char_pos], location[char_pos:]]
 
 
-def parse_info():
+def parse_info(link, specialization):
     """
-    Scrape reviews from book's Goodreads webpage using BeautifulSoup 4.
-    Return a list of tuples (names,rating,reviews)
+    :param link: https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page=
+    :param specialization: CS
+    :return: data_list
     """
     requests_session = requests.Session()  # Launch a requests session in order to improve performance
 
     page = 1
-    page_url = f"https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page={page}"
+    page_url = link + str(page)
+    # page_url = f"https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page={page}"
     webpage = requests_session.get(page_url)
     soup = BeautifulSoup(webpage.content, "lxml")
 
@@ -46,7 +48,7 @@ def parse_info():
         subtitles_raw = soup.find_all('div', class_="ds-top-content")
         subtitles = [subtitle.text.strip() for subtitle in subtitles_raw]
 
-        recruiters_raw = soup.find_all('div', class_="field-name-recruiter-name") 
+        recruiters_raw = soup.find_all('div', class_="field-name-recruiter-name")
         recruiters = [recruiter.text.strip() for recruiter in recruiters_raw]
 
         locations_raw = soup.find_all('div', class_="field-name-field-traineeship-full-location")
@@ -84,9 +86,10 @@ def parse_info():
         for offer in full_info:
             offer_dict = {"title": offer[0], "subtitle": offer[1], "recruiter": offer[2],
                           "full_location": offer[3], "duration": offer[4], "deadline": offer[5],
-                          "periods": offer[6], "requirements": offer[7]}
+                          "periods": offer[6], "requirements": offer[7], "specialization": specialization}
             data_list.append(offer_dict)
+            ic(offer_dict)
     return data_list
-# print(parse_info())
+# print(parse_info("https://erasmusintern.org/traineeships?f%5B0%5D=field_traineeship_field_studies%253Aparents_all%3A38&page=","Engineering and technology"))
 
 
