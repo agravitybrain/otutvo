@@ -20,7 +20,7 @@ def wait_for_map_generation():
                      "commitment": commitment})
 
     if not loc_list:
-        print("Page not found")
+        return render_template("error.html")
 
 
     fl_map = generate_map(loc_list)
